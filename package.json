@@ -1,0 +1,25 @@
+{
+  "name": "esdir",
+  "version": "0.1.0",
+  "description": "object inspection tool for ES",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sairion/esdir.git"
+  },
+  "keywords": [
+    "ECMAScript",
+    "dir",
+    "JavaScript",
+    "Python"
+  ],
+  "author": "Jaeho Lee <me@jaeholee.org>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sairion/esdir/issues"
+  },
+  "homepage": "https://github.com/sairion/esdir"
+}
