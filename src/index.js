@@ -1,31 +1,31 @@
-export default function dir(toInspect, pprint=true) {
-    'use strict';
+export default function dir(toInspect) {
+    if (Object.getOwnPropertyNames == null) {
+        throw new Error('Since Object.getOwnPropertyNames does not exist, it is not possible to retrieve non-enumerable properties.');
+    }
     if (toInspect == null) {
         return [];
     }
 
-    let props;
+    // Extensible objects: (function | objects) needs different approach.
+    let extensible = typeof toInspect === 'function' ||
+                     typeof toInspect === 'object';
 
-    let isConstructorSelf = toInspect.prototype != null;
-    let constructor = isConstructorSelf ? toInspect : toInspect.constructor;
-
-    if (Object.getOwnPropertyNames == null) {
-        throw new Error('Since Object.getOwnPropertyNames does not exist, it is not possible to retrieve non-enumerable properties.');
+    let isTheConstructorSelf = toInspect.prototype != null;
+    let thePrototype = isTheConstructorSelf ? toInspect.prototype :
+                                              toInspect.constructor.prototype;
+    // Extensible type objects are inspected for itself and its prototype
+    if (extensible) {
+        return extendMutable(
+            Object.getOwnPropertyNames(toInspect),
+            Object.getOwnPropertyNames(thePrototype)
+        );
+    } else {
+        return Object.getOwnPropertyNames(thePrototype);
     }
+}
 
-    if (constructor) {
-        let descriptor = constructor.__dir__;
-
-        if (typeof descriptor === 'function') {
-            let d = descriptor();
-            if (d instanceof Array) {
-                return d;
-            }
-        } else if (descriptor != null) {
-            return descriptor;
-        }
-        props = Object.getOwnPropertyNames(constructor.prototype);
-    }
-
-    return props;
+function extendMutable(array, nextArray) {
+    nextArray.unshift(array.length, 0);
+    array.splice.apply(array, nextArray);
+    return array;
 }
